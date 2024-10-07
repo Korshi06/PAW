@@ -1,61 +1,90 @@
-const { createServer } = require('http')
-const fs = require('fs')
-const path = require('path')
+const http = require("http");
+const fs = require("fs");
+const mime = require("mime-types");
 
-const hostname = '127.0.0.1'
-const port = 3000
+const server = http.createServer((req, res) => {
+    const url = req.url;
+    console.log("url - " + url);
 
-const requestListener = (req, res) => {
-    switch(req.url) {
-        case '/':
-            res.writeHead(200, { 'Content-Type': 'text/plain' })
-            res.end('Strona glowna')
-            break;
-        case '/json':
-            res.writeHead(200, { 'Content-Type': 'application/json' })
-            const jsonFilePath = path.join(__dirname, 'package.json')
-            res.end(jsonFilePath)
-            break;
+    if (url === "/") {
+        res.writeHead(200, { "Content-Type": "text/plain" });
+        res.write("Hello World");
+        res.end();
+    } else if (url === "/json") {
+        res.writeHead(200, { "Content-Type": "application/json" });
+        let returning_json = {
+            "hello": "world"
+        };
+        let jsonString = JSON.stringify(returning_json);
+        res.write(jsonString);
+        res.end();
+    } else if (url === "/html") {
+        res.writeHead(200, { "Content-Type": "text/html" });
+        let html = "<html lang=\"en\"><head><title>Hello World</title></head><body><h1>Hello World from text</h1></body></html>";
+        res.write(html);
+        res.end();
+    } else if (url === "/html-file") {
+        fs.readFile("index.html", (err, data) => {
+            if (err) {
+                res.writeHead(500, { "Content-Type": "text/plain" });
+                res.write("Error" + err);
+                res.end();
+            } else {
+                res.writeHead(200, { "Content-Type": "text/html" });
+                res.write(data);
+                res.end();
+            }
+        });
+    } else if (url.startsWith("/get-params")) {
+        const queryParams = new URL(req.url, `http://${req.headers.host}`).searchParams;
+        const entries = queryParams.entries();
+        const json_content = {};
+        
+        for (const param of entries) {
+            json_content[param[0]] = param[1];
+        }
 
-        case '/html':
-            res.writeHead(200, { 'Content-Type': 'text/html' })
-            res.end(`<!DOCTYPE html>
-                    <html lang="pl">
-                    
-                    <head>
-                        <meta charset="UTF-8">
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                        <title>HTML z Pliku</title>
-                    </head>
-                    
-                    <body>
-                        <h1>To jest statyczna strona HTML pobrana z pliku!</h1>
-                    </body>
-                    
-                    </html>`)
-            break;
+        fs.writeFile("params.json", JSON.stringify(json_content, null, 2), (err) => {
+            if (err) {
+                res.writeHead(500, { "Content-Type": "text/plain" });
+                res.write(JSON.stringify({ "error": err }));
+                res.end();
+            } else {
+                res.writeHead(200, { "Content-Type": "application/json" });
+                res.write(JSON.stringify({ 'ok': 'ok' }));
+                res.end();
+            }
+        });
+    } else {
+        const file_path = "assets/" + url.slice(1);
+        const file_extension = url.slice(url.lastIndexOf("."));
 
-        case '/file':
-            const filePath = path.join(__dirname, 'static', 'file.html')
-            fs.readFile(filePath, (err, data) => {
-                if (err) {
-                    res.writeHead(500, { 'Content-Type': 'text/plain' })
-                    res.end('Błąd serwera');
-                } else {
-                    res.writeHead(200, { 'Content-Type': 'text/html' })
-                    res.end(data)
-                }
-            });
-            break
-
-        default:
-            res.writeHead(404, { 'Content-Type': 'text/plain' })
-            res.end('Not Found')
+        fs.stat(file_path, (statErr, stats) => {
+            if (statErr || !stats.isFile()) {
+                res.writeHead(404, { "Content-Type": "text/plain" });
+                res.write("404 Not Found");
+                res.end();
+            } else {
+                fs.readFile(file_path, (err, data) => {
+                    if (err) {
+                        res.writeHead(500, { "Content-Type": "text/plain" });
+                        res.write("500 Internal Server Error");
+                        res.end();
+                    } else {
+                        let content_type = mime.lookup(file_extension);
+                        if (!content_type) {
+                            content_type = "text/plain";
+                        }
+                        res.writeHead(200, { "Content-Type": content_type });
+                        res.write(data);
+                        res.end();
+                    }
+                });
+            }
+        });
     }
-};
+});
 
-const server = createServer(requestListener)
-
-server.listen(port, hostname, () => {
-    console.log(`Server running at http://${hostname}:${port}/`)
-})
+server.listen(3000, () => {
+    console.log('Server is running on http://localhost:3000');
+});
