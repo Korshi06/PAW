@@ -13,7 +13,7 @@ const server = http.createServer((req, res) => {
     } else if (url === "/json") {
         res.writeHead(200, { "Content-Type": "application/json" });
         let returning_json = {
-            "hello": "world"
+            "ok": "ok"
         };
         let jsonString = JSON.stringify(returning_json);
         res.write(jsonString);
