@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <title>Kontakt</title>
+</head>
+<body>
+<%- include('partials/menu'); %>
+
+<div id="main">
+    <h1>Kontakt</h1>
+    <form action="/wyslano" method="POST">
+        <label for="firstName">Imię:</label>
+        <input type="text" id="firstName" name="firstName" required>
+
+        <label for="lastName">Nazwisko:</label>
+        <input type="text" id="lastName" name="lastName" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="message">Treść wiadomości:</label>
+        <textarea id="message" name="message" rows="5" required></textarea>
+
+        <button type="submit">Wyślij</button>
+    </form>
+
+</div>
+<%- include('partials/footer'); %>
+
+</body>
+</html>
