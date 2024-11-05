@@ -25,7 +25,15 @@ router.get('/kontakt', function(req, res, next) {
 router.post('/wyslano', function(req, res, next) {
   var { firstName, lastName, email, message } = req.body;
 
-  console.log(`Message from ${firstName} ${lastName}: ${message} (Email: ${email})`);
+  const {insertData} = require('../DBoperations');
+
+  try{
+    insertData(firstName, lastName, email, message);
+  }
+  catch(e){
+    console.log(e);
+    throw e;
+  }
 
   res.render('index', { title: 'Strona Główna'});
 });
