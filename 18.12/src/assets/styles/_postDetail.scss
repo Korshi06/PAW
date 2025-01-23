@@ -1,0 +1,34 @@
+@use 'variables' as vars;
+
+.post-detail {
+  background-color: white;
+  border: 1px solid vars.$border-color;
+  border-radius: 5px;
+  padding: 20px;
+  margin-top: 20px;
+
+  h2 {
+    color: vars.$primary-color;
+    margin-bottom: 15px;
+  }
+
+  p {
+    font-size: 16px;
+    line-height: 1.8;
+  }
+
+  h3 {
+    margin-top: 20px;
+    color: vars.$secondary-color;
+  }
+
+  .user-info {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid vars.$border-color;
+
+    p {
+      margin: 5px 0;
+    }
+  }
+}
