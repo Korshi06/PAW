@@ -1,24 +1,39 @@
-import ReactDOM from "react-dom/client";
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Layout from "./Layout";
-import Home from "./Home";
-import Contact from "./Contact";
-import NoPage from "./NoPage";
-import Blog from "./Blog";
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import PostPage from './pages/PostPage';
+import Categories from './pages/Categories';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import PostListPage from "./pages/PostListPage";
 
-export default function App() {
+const App = () => {
+    const [currentPage, setCurrentPage] = useState('Home'); // Stan przechowujący nazwę strony
+
     return (
-        <BrowserRouter>
+        <Router>
+            <Header />
             <Routes>
-                <Route path="/" element={<Layout />}>
-                    <Route index element={<Home />} />
-                    <Route path="contact" element={<Contact />} />
-                    <Route path="blog" element={<Blog />} />
-                    <Route path="*" element={<NoPage />} />
-                </Route>
+                <Route
+                    path="/"
+                    element={<Home setCurrentPage={setCurrentPage} />}
+                />
+                <Route
+                    path="/post/:id"
+                    element={<PostPage setCurrentPage={setCurrentPage} />}
+                />
+                <Route
+                    path="/categories"
+                    element={<Categories setCurrentPage={setCurrentPage} />}
+                />
+                <Route
+                    path="/postList"
+                    element={<PostListPage   setCurrentPage={setCurrentPage} />}
+                />
             </Routes>
-        </BrowserRouter>
+            <Footer currentPage={currentPage} />
+        </Router>
     );
-}
+};
 
-ReactDOM.createRoot(document.getElementById("root")!).render(<App />);
+export default App;
