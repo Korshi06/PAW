@@ -1,0 +1,29 @@
+@use 'variables' as vars;
+
+body {
+  font-family: vars.$font-stack;
+  background-color: vars.$background-color;
+  color: vars.$text-color;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
+a {
+  color: vars.$primary-color;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+h1, h2, h3 {
+  margin-top: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
