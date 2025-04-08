@@ -39,11 +39,11 @@ export default function PostPage() {
     if (postError || userError) return <p>Error loading data.</p>
 
     return (
-        <div>
+        <div className="post-page">
             <h1>{post.title}</h1>
             <p>{post.body}</p>
             <hr />
-            <h3>Author:</h3>
+            <h3>Autor:</h3>
             <p>{user.name} ({user.email})</p>
         </div>
     )

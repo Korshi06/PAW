@@ -17,10 +17,10 @@ export default function PostList() {
     if (isError) return <p>Wystąpił błąd przy pobieraniu postów.</p>
 
     return (
-        <div>
+        <div className="post-list">
             <h1>Lista postów</h1>
             {data.map((post: any) => (
-                <div key={post.id}>
+                <div key={post.id} className="post-item">
                     <Link to={`/posts/${post.id}`}>
                         <h2>{post.title}</h2>
                     </Link>
@@ -28,4 +28,5 @@ export default function PostList() {
             ))}
         </div>
     )
+
 }
