@@ -1,0 +1,31 @@
+@use 'variables' as vars;
+@use 'sass:color';
+
+
+.post-list {
+  list-style: none;
+  padding: 0;
+
+  li {
+    background-color: white;
+    border: 1px solid vars.$border-color;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding: 15px;
+    transition: box-shadow 0.3s ease;
+
+    &:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    a {
+      font-size: 18px;
+      font-weight: bold;
+      color: vars.$primary-color;
+
+      &:hover {
+        color: color.scale(vars.$primary-color, $lightness: -10%);
+      }
+    }
+  }
+}

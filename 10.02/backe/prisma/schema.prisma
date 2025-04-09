@@ -1,0 +1,35 @@
+// schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Kategoria {
+  id    Int    @id @default(autoincrement())
+  nazwa String
+  wpisy Wpis[] @relation("WpisKategoria")
+}
+
+model Wpis {
+  id             Int         @id @default(autoincrement())
+  tytul          String
+  tresc          String
+  dataUtworzenia DateTime    @default(now())
+  kategoriaId    Int?
+  kategoria      Kategoria?  @relation("WpisKategoria", fields: [kategoriaId], references: [id])
+  komentarze     Komentarz[]
+}
+
+model Komentarz {
+  id          Int      @id @default(autoincrement())
+  tresc       String
+  autor       String
+  dataDodania DateTime @default(now())
+  wpisId      Int
+  wpis        Wpis     @relation(fields: [wpisId], references: [id])
+}
